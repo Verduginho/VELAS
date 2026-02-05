@@ -100,7 +100,7 @@ body {
   font-size: 1.05rem;
 }
 
- .badge {
+.badge {
   margin: 0 0 0.35rem;
   font-size: 0.78rem;
   display: inline-block;
@@ -234,4 +234,37 @@ button.secondary:hover {
   .layout-admin {
     grid-template-columns: 1fr;
   }
+}
+
+
+.layout-admin-auth {
+  grid-template-columns: 1fr;
+  max-width: 980px;
+}
+
+.auth-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem;
+  width: min(460px, 100%);
+  margin: 0 auto;
+}
+
+.error {
+  margin: 0;
+  color: #9b2246;
+  font-size: 0.9rem;
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.admin-header-actions h2 {
+  margin: 0;
 }

@@ -1,4 +1,7 @@
 const STORAGE_KEY = 'velas-products';
+const AUTH_STORAGE_KEY = 'velas-admin-auth';
+const ADMIN_USERNAME = 'judith';
+const ADMIN_PASSWORD = 'admin';
 
 const CATEGORY_LABELS = {
   tortas: 'Tortas',
@@ -45,7 +48,8 @@ const defaultProducts = [
 ];
 
 const state = {
-  products: loadProducts()
+  products: loadProducts(),
+  authenticated: readAuthState()
 };
 
 const cakesCatalog = document.getElementById('catalog-cakes');
@@ -62,12 +66,54 @@ const cancelBtn = document.getElementById('cancel-btn');
 const saveBtn = document.getElementById('save-btn');
 const cardTemplate = document.getElementById('cake-card-template');
 
+const authSection = document.getElementById('auth-section');
+const adminContent = document.getElementById('admin-content');
+const loginForm = document.getElementById('login-form');
+const loginUserField = document.getElementById('login-username');
+const loginPasswordField = document.getElementById('login-password');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+
 renderCatalog();
-renderAdminList();
+renderAdminView();
+
+if (loginForm) {
+  loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const username = loginUserField.value.trim().toLowerCase();
+    const password = loginPasswordField.value;
+
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      state.authenticated = true;
+      persistAuthState(true);
+      loginError.hidden = true;
+      loginForm.reset();
+      renderAdminView();
+      return;
+    }
+
+    state.authenticated = false;
+    persistAuthState(false);
+    loginError.hidden = false;
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
+    state.authenticated = false;
+    persistAuthState(false);
+    renderAdminView();
+  });
+}
 
 if (form) {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+
+    if (!state.authenticated) {
+      return;
+    }
 
     const imageSource = await resolveImageSource();
     const productData = {
@@ -110,6 +156,23 @@ if (cancelBtn) {
   });
 }
 
+function renderAdminView() {
+  if (!authSection || !adminContent) {
+    renderAdminList();
+    return;
+  }
+
+  if (state.authenticated) {
+    authSection.hidden = true;
+    adminContent.hidden = false;
+    renderAdminList();
+    return;
+  }
+
+  authSection.hidden = false;
+  adminContent.hidden = true;
+}
+
 function renderCatalog() {
   renderCategoryCatalog('tortas', cakesCatalog);
   renderCategoryCatalog('velas-toppers', accessoriesCatalog);
@@ -146,7 +209,7 @@ function renderCategoryCatalog(category, container) {
 }
 
 function renderAdminList() {
-  if (!adminList) return;
+  if (!adminList || !state.authenticated) return;
 
   adminList.innerHTML = '';
 
@@ -178,7 +241,7 @@ function renderAdminList() {
 }
 
 function startEditing(id) {
-  if (!form) return;
+  if (!form || !state.authenticated) return;
 
   const item = state.products.find((product) => product.id === id);
   if (!item) return;
@@ -194,6 +257,8 @@ function startEditing(id) {
 }
 
 function deleteProduct(id) {
+  if (!state.authenticated) return;
+
   state.products = state.products.filter((item) => item.id !== id);
   persistState();
   renderCatalog();
@@ -259,6 +324,14 @@ function loadProducts() {
   } catch {
     return [...defaultProducts];
   }
+}
+
+function readAuthState() {
+  return localStorage.getItem(AUTH_STORAGE_KEY) === 'true';
+}
+
+function persistAuthState(value) {
+  localStorage.setItem(AUTH_STORAGE_KEY, String(value));
 }
 
 function persistState() {
