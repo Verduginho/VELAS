@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administración de Tortas | Velas</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Panel de administración</h1>
+      <p>Crea, edita o elimina tortas del catálogo.</p>
+      <nav class="top-nav">
+        <a href="index.html">Catálogo</a>
+        <a href="admin.html" aria-current="page">Administración</a>
+      </nav>
+    </header>
+
+    <main class="layout layout-admin">
+      <aside class="admin-panel">
+        <form id="cake-form" class="form">
+          <input type="hidden" id="cake-id" />
+
+          <label for="cake-name">Nombre</label>
+          <input id="cake-name" type="text" placeholder="Ej: Torta de chocolate" required />
+
+          <label for="cake-price">Precio (USD)</label>
+          <input id="cake-price" type="number" min="1" step="0.01" placeholder="Ej: 25" required />
+
+          <label for="cake-description">Descripción</label>
+          <textarea id="cake-description" rows="3" placeholder="Ej: Bizcocho húmedo, relleno de ganache"></textarea>
+
+          <label for="cake-image">Imagen</label>
+          <input id="cake-image" type="file" accept="image/*" />
+          <small class="hint">Sube una imagen desde tu dispositivo (jpg, png, webp, etc.).</small>
+
+          <div class="form-actions">
+            <button type="submit" id="save-btn">Guardar torta</button>
+            <button type="button" id="cancel-btn" class="secondary" hidden>Cancelar edición</button>
+          </div>
+        </form>
+      </aside>
+
+      <section>
+        <h2>Tortas registradas</h2>
+        <ul id="admin-list" class="admin-list"></ul>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
