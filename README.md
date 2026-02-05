@@ -45,3 +45,26 @@ git pull --rebase
 ```
 
 Con esto el historial queda más limpio y es menos probable que se mezclen cambios en todos los archivos.
+
+
+## Si GitHub dice "This branch has conflicts that must be resolved"
+
+Ese mensaje no significa que el código tenga marcadores visibles en tu rama actual; normalmente significa que tu rama quedó desactualizada respecto a la rama destino del PR.
+
+Pasos recomendados (línea de comandos):
+
+```bash
+git fetch origin
+git rebase origin/main
+# resolver conflictos si aparecen
+git add .
+git rebase --continue
+git push --force-with-lease
+```
+
+Verificación rápida antes de subir:
+
+```bash
+node --check app.js
+rg -n "^(<<<<<<<|=======|>>>>>>>)" --glob '!README.md'
+```

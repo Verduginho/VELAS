@@ -204,14 +204,22 @@ function bindAdminEvents(elements) {
       event.preventDefault();
       if (!state.authenticated) return;
 
-      const product = await buildProductFromForm(elements);
-      if (!product) return;
+      try {
+        const product = await buildProductFromForm(elements);
+        if (!product) return;
 
-      upsertProduct(product);
-      persistProducts();
-      resetForm(elements);
-      renderCatalog(elements);
-      renderAdminList(elements);
+        upsertProduct(product);
+        persistProducts();
+        resetForm(elements);
+        renderCatalog(elements);
+        renderAdminList(elements);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'No se pudo guardar el producto.';
+        if (elements.formError) {
+          elements.formError.hidden = false;
+          elements.formError.textContent = message;
+        }
+      }
     });
   }
 
@@ -277,7 +285,7 @@ function upsertProduct(product) {
 }
 
 function renderAdminView(elements) {
-  const { authSection, adminContent } = elements;
+  const { authSection, adminContent, adminList } = elements;
   if (!authSection || !adminContent) {
     renderAdminList(elements);
     return;
@@ -288,7 +296,14 @@ function renderAdminView(elements) {
 
   if (state.authenticated) {
     renderAdminList(elements);
+    return;
   }
+
+  if (adminList) {
+    adminList.innerHTML = '';
+  }
+
+  resetForm(elements);
 }
 
 function renderCatalog(elements) {
@@ -508,6 +523,8 @@ function fileToDataURL(file) {
 }
 
 function loadProducts() {
+  if (typeof localStorage === 'undefined') return [...DEFAULT_PRODUCTS];
+
   const stored = localStorage.getItem(STORAGE_KEY);
 
   if (!stored) {
@@ -533,14 +550,17 @@ function loadProducts() {
 }
 
 function readAuthState() {
+  if (typeof localStorage === 'undefined') return false;
   return localStorage.getItem(AUTH_STORAGE_KEY) === 'true';
 }
 
 function persistAuthState(value) {
+  if (typeof localStorage === 'undefined') return;
   localStorage.setItem(AUTH_STORAGE_KEY, String(value));
 }
 
 function persistProducts() {
+  if (typeof localStorage === 'undefined') return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.products));
 }
 
