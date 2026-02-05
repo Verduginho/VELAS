@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Catálogo de tortas, velas y toppers con precios en soles peruanos." />
+    <title>Catálogo | Velas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;700;800&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Catálogo</h1>
+      <p>Explora nuestras categorías: tortas y velas/toppers.</p>
+      <nav class="top-nav" aria-label="Navegación principal">
+        <a href="index.html" aria-current="page">Catálogo</a>
+        <a href="admin.html">Administración</a>
+      </nav>
+    </header>
+
+    <main class="layout layout-catalog">
+      <section aria-labelledby="title-tortas">
+        <div class="category-header">
+          <h2 id="title-tortas">Tortas</h2>
+          <div id="controls-tortas" class="catalog-controls" aria-live="polite"></div>
+        </div>
+        <div id="catalog-cakes" class="catalog-grid" aria-live="polite"></div>
+      </section>
+
+      <section aria-labelledby="title-velas">
+        <div class="category-header">
+          <h2 id="title-velas">Velas y toppers</h2>
+          <div id="controls-velas-toppers" class="catalog-controls" aria-live="polite"></div>
+        </div>
+        <div id="catalog-accessories" class="catalog-grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <template id="cake-card-template">
+      <article class="cake-card">
+        <img alt="" loading="lazy" />
+        <div class="cake-content">
+          <p class="badge"></p>
+          <h3></h3>
+          <p class="description"></p>
+          <p class="price"></p>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
